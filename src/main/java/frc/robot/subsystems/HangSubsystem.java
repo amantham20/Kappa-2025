@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Configs;
+import frc.robot.Constants.ElevatorSubsystemConstants;
 import frc.robot.Constants.HangSubsystemConstants;
 import frc.robot.Constants.HangSubsystemConstants.HangSetpoints;
 
@@ -61,6 +62,8 @@ public class HangSubsystem extends SubsystemBase {
         Configs.HangSubsystem.hangConfig,
         ResetMode.kResetSafeParameters,
         PersistMode.kPersistParameters);
+
+ 
    
 
     // Display mechanism2d
@@ -80,7 +83,10 @@ public class HangSubsystem extends SubsystemBase {
     hangClosedLoopController.setReference(
        hangCurrentTarget, ControlType.kMAXMotionPositionControl);
   }
-
+  public void syncHangControl(){
+    hangCurrentTarget = hangEncoder.getPosition();
+    moveToSetpoint();
+  }
   /** Zero the elevator encoder when the limit switch is pressed. */
   private void zeroHangOnLimitSwitch() {
     if (!wasResetByLimit && hangMotor.getReverseLimitSwitch().isPressed()) {
@@ -140,8 +146,15 @@ public class HangSubsystem extends SubsystemBase {
 
     SmartDashboard.putNumber("Hang/Target Position", hangCurrentTarget);
     SmartDashboard.putNumber("Hang/Actual Position", hangEncoder.getPosition());
+    SmartDashboard.putNumber("Hang/Current", getHangCurrent());
 
   }
   /** Get the current drawn by each simulation physics model */
+  public void setHangPower(double speed){
+    hangMotor.set(speed);
+  }
 
+  public double getHangCurrent(){
+    return hangMotor.getOutputCurrent();
+  }
 }

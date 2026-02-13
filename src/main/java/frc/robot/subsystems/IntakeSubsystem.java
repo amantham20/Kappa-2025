@@ -7,14 +7,19 @@ import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
+import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
+import com.revrobotics.spark.config.SparkMaxConfig;
 
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.RobotController;
+import edu.wpi.first.wpilibj.motorcontrol.Spark;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Configs;
 import frc.robot.Constants.IntakeSubsystemConstants.IntakeSetpoints;
+import frc.robot.Constants.ElevatorSubsystemConstants;
+import frc.robot.Constants.HangSubsystemConstants;
 import frc.robot.Constants.IntakeSubsystemConstants;
 
 
@@ -38,14 +43,27 @@ public class IntakeSubsystem extends SubsystemBase {
   // controller like above.
   private SparkMax intakeMotor =
       new SparkMax(IntakeSubsystemConstants.kIntakeMotorCanId, MotorType.kBrushless);
+
   private DigitalInput intakeInput = 
       new DigitalInput(IntakeSubsystemConstants.KIntakeInputDigitalIO);
+
       private DigitalInput outtakeInput = 
       new DigitalInput(IntakeSubsystemConstants.KOuttakeInputDigitalIO);
 
+            private SparkMax intakeFollowerMotor =
+      new SparkMax(IntakeSubsystemConstants.kIntakeFollowerMotorCanId, MotorType.kBrushless);
+
+  private SparkClosedLoopController intakeClosedLoopController =
+      intakeMotor.getClosedLoopController();
+
+      private RelativeEncoder intakeEncoder = intakeMotor.getEncoder();
+
+      private RelativeEncoder intakeFollowerEncoder = intakeFollowerMotor.getEncoder();
 
 
- 
+  
+      public static final SparkMaxConfig intakeConfig = new SparkMaxConfig();
+
 
 
   public IntakeSubsystem() {
@@ -59,11 +77,19 @@ public class IntakeSubsystem extends SubsystemBase {
      * the SPARK loses power. This is useful for power cycles that may occur
      * mid-operation.
      */
+ 
 
     intakeMotor.configure(
-        Configs.CoralSubsystem.intakeConfig,
+        Configs.ElevatorSubsystem.intakeConfig,
         ResetMode.kResetSafeParameters,
         PersistMode.kPersistParameters);
+
+        intakeFollowerMotor.configure(
+          Configs.ElevatorSubsystem.intakeConfig.follow(IntakeSubsystemConstants.kIntakeMotorCanId, true),
+        ResetMode.kResetSafeParameters,
+        PersistMode.kPersistParameters);
+        
+ 
 
     // Display mechanism2d
 
@@ -120,6 +146,8 @@ public class IntakeSubsystem extends SubsystemBase {
     // Display subsystem values
 
   
+    SmartDashboard.putBoolean("Coral/Intake/intake input", getIntakeInput());
+    SmartDashboard.putBoolean("Coral/Intake/outtake input", getOuttakeInput());
     SmartDashboard.putNumber("Coral/Intake/Applied Output", intakeMotor.getAppliedOutput());
 
   }

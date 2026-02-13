@@ -4,6 +4,7 @@ import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
+import com.revrobotics.spark.ClosedLoopSlot;
 import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
@@ -14,6 +15,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Configs;
 import frc.robot.Constants.ElevatorSubsystemConstants;
 import frc.robot.Constants.ElevatorSubsystemConstants.ElevatorSetpoints;
+import org.littletonrobotics.junction.Logger;
 
 
 public class ElevatorSubsystem extends SubsystemBase {
@@ -21,6 +23,7 @@ public class ElevatorSubsystem extends SubsystemBase {
   public enum Setpoint {
     kFeederStation,
     kLevel1,
+    kLevel1AndAHalf,
     kLevel2,
     kLevel3,
     kLevel4;
@@ -33,14 +36,16 @@ public class ElevatorSubsystem extends SubsystemBase {
   // need to initialize the closed loop controller and encoder.
   private SparkMax elevatorFollowerMotor =
   new SparkMax(ElevatorSubsystemConstants.kElevatorFollowerMotorCanId, MotorType.kBrushless);
-  private SparkMax elevatorMotor =
+  private SparkMax elevatorMotor = 
       new SparkMax(ElevatorSubsystemConstants.kElevatorMotorCanId, MotorType.kBrushless);
   private SparkClosedLoopController elevatorClosedLoopController =
       elevatorMotor.getClosedLoopController();
-  private RelativeEncoder elevatorEncoder = elevatorMotor.getEncoder();
-
+  // private RelativeEncoder elevatorEncoder = elevatorMotor.getEncoder();
+    private RelativeEncoder elevatorEncoder = elevatorMotor.getEncoder();
   // Initialize intake SPARK. We will use open loop control for this so we don't need a closed loop
   // controller like above.
+
+
 
   // Member variables for subsystem state management
   private boolean wasResetByButton = false;
@@ -61,12 +66,13 @@ public class ElevatorSubsystem extends SubsystemBase {
      * the SPARK loses power. This is useful for power cycles that may occur
      * mid-operation.
      */
+          
     elevatorMotor.configure(
-        Configs.CoralSubsystem.elevatorConfig,
+        Configs.ElevatorSubsystem.elevatorConfig,
         ResetMode.kResetSafeParameters,
         PersistMode.kPersistParameters);
     elevatorFollowerMotor.configure(
-        Configs.CoralSubsystem.elevatorConfig.follow(ElevatorSubsystemConstants.kElevatorMotorCanId),
+        Configs.ElevatorSubsystem.elevatorConfig.follow(ElevatorSubsystemConstants.kElevatorMotorCanId,true),
         ResetMode.kResetSafeParameters,
         PersistMode.kPersistParameters);
 
@@ -83,9 +89,9 @@ public class ElevatorSubsystem extends SubsystemBase {
    * position control which will allow for a smooth acceleration and deceleration to the mechanisms'
    * setpoints.
    */
-  private void moveToSetpoint() {
+  public void moveToSetpoint() {
     elevatorClosedLoopController.setReference(
-        elevatorCurrentTarget, ControlType.kMAXMotionPositionControl);
+        elevatorCurrentTarget, ControlType.kMAXMotionPositionControl, ClosedLoopSlot.kSlot0, ElevatorSubsystemConstants.kArbFF);
   }
 
   /** Zero the elevator encoder when the limit switch is pressed. */
@@ -130,6 +136,10 @@ public class ElevatorSubsystem extends SubsystemBase {
             
               elevatorCurrentTarget = ElevatorSetpoints.kLevel1;
               break;
+            case kLevel1AndAHalf:
+            
+              elevatorCurrentTarget = ElevatorSetpoints.kLevel1AndAHalf;
+              break;
             case kLevel2:
               
               elevatorCurrentTarget = ElevatorSetpoints.kLevel2;
@@ -146,24 +156,43 @@ public class ElevatorSubsystem extends SubsystemBase {
         });
   }
 
-  public Command CustomElevatorControl(double power){
-    // TODO move to constants and determine a factor
-   double SPEED_FACTOR = 0.2;
-      return this.startEnd(() ->  elevatorMotor.set(power * SPEED_FACTOR), () -> elevatorMotor.set(0));
-  } 
+ 
   @Override
   public void periodic() {
     moveToSetpoint();
     zeroElevatorOnLimitSwitch();
     zeroOnUserButton();
+    Logger.recordOutput("Odometry/Elevator/Target", elevatorCurrentTarget);
+    Logger.recordOutput("Odometry/Elevator/Actual", elevatorEncoder.getPosition());
+
+
 
     // Display subsystem values
 
     SmartDashboard.putNumber("Coral/Elevator/Target Position", elevatorCurrentTarget);
     SmartDashboard.putNumber("Coral/Elevator/Actual Position", elevatorEncoder.getPosition());
+    SmartDashboard.putNumber("Coral/Elevator/Current", getElevatorCurrent());
 
 
   }
   /** Get the current drawn by each simulation physics model */
+  public double getElevatorCurrent(){
+    return elevatorMotor.getOutputCurrent();
+  }
+  public double getElevatorEncoder() {
+    return elevatorEncoder.getPosition();
+    //return elevatorMotor.getEncoder().getPosition();
+  }
 
+  public void setElevatorPower(double speed){
+    elevatorMotor.set(speed);
+  }
+
+  public void syncElevatorControl(){
+    elevatorCurrentTarget = elevatorEncoder.getPosition();
+    moveToSetpoint();
+  }
+  public void setElevatorCurrentTarget(double currentTarget){
+    elevatorCurrentTarget = currentTarget;
+  }
 }

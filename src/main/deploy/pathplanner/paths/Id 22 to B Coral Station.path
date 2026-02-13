@@ -3,40 +3,40 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.800102459016393,
-        "y": 5.18780737704918
+        "x": 5.05,
+        "y": 2.75
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.1409177202650844,
-        "y": 5.848757430786623
+        "x": 4.24075,
+        "y": 1.9114999999999998
       },
       "isLocked": false,
-      "linkedName": "ID 6"
+      "linkedName": "ID 22"
     },
     {
       "anchor": {
-        "x": 1.6662909836065571,
-        "y": 7.321618852459016
+        "x": 0.9110655737704917,
+        "y": 1.022079918032788
       },
       "prevControl": {
-        "x": 1.9180327868852458,
-        "y": 7.16577868852459
+        "x": 2.100565573770491,
+        "y": 1.275579918032788
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Coral Station"
+      "linkedName": "Coral Station Bottom"
     }
   ],
   "rotationTargets": [],
   "constraintZones": [
     {
       "name": "Constraints Zone",
-      "minWaypointRelativePos": 0.585251798561147,
+      "minWaypointRelativePos": 0.8228869895536559,
       "maxWaypointRelativePos": 1.0,
       "constraints": {
-        "maxVelocity": 1.0,
-        "maxAcceleration": 2.0,
+        "maxVelocity": 1.5,
+        "maxAcceleration": 0.8,
         "maxAngularVelocity": 270.0,
         "maxAngularAcceleration": 360.0,
         "nominalVoltage": 12.0,
@@ -47,8 +47,8 @@
   "pointTowardsZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 3.0,
-    "maxAcceleration": 3.0,
+    "maxVelocity": 1.8,
+    "maxAcceleration": 2.0,
     "maxAngularVelocity": 270.0,
     "maxAngularAcceleration": 360.0,
     "nominalVoltage": 12.0,
@@ -56,13 +56,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -54.09027692082242
+    "rotation": 53.68635458123665
   },
   "reversed": false,
-  "folder": null,
+  "folder": "Right Paths",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": -59.0362434679265
+    "rotation": 122.38067770656916
   },
   "useDefaultConstraints": true
 }

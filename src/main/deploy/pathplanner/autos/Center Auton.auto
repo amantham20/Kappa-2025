@@ -5,63 +5,51 @@
     "data": {
       "commands": [
         {
+          "type": "wait",
+          "data": {
+            "waitTime": 3.0
+          }
+        },
+        {
           "type": "path",
           "data": {
-            "pathName": "Go to ID11"
+            "pathName": "Center to ID 21"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 1.0
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "HingeL4"
+            "name": "AutoElevatorkLevel4"
           }
         },
         {
           "type": "wait",
           "data": {
-            "waitTime": 1.0
+            "waitTime": 2.5
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "AutoOuttake"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "Coral Station from ID11"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Coral Station To ID6"
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 1.0
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "ID6toCoralStation"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Coral Station To ID6"
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 1.0
+            "pathName": "back up"
           }
         }
       ]
     }
   },
-  "resetOdom": true,
-  "folder": null,
+  "resetOdom": false,
+  "folder": "Center Autons",
   "choreoAuto": false
 }

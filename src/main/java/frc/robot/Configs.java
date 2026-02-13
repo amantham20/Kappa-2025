@@ -13,15 +13,17 @@ public final class Configs {
  
 
 
-  public static final class CoralSubsystem {
-    public static final SparkFlexConfig elevatorConfig = new SparkFlexConfig();
+  public static final class ElevatorSubsystem {
+    public static final SparkMaxConfig elevatorConfig = new SparkMaxConfig();
+    
     public static final SparkMaxConfig intakeConfig = new SparkMaxConfig();
+
 
     static {
 
   
       // Configure basic settings of the elevator motor
-      elevatorConfig.idleMode(IdleMode.kCoast).smartCurrentLimit(50).voltageCompensation(12);
+      elevatorConfig.idleMode(IdleMode.kBrake).smartCurrentLimit(40).voltageCompensation(12).inverted(true);
 
       /*
        * Configure the reverse limit switch for the elevator. By enabling the limit switch, this
@@ -29,10 +31,12 @@ public final class Configs {
        * pressed.
        */
       elevatorConfig
-          .limitSwitch
-          .reverseLimitSwitchEnabled(true)
-          .reverseLimitSwitchType(Type.kNormallyOpen);
-
+      //TODO change softLimit and Hard Limit
+          .softLimit.forwardSoftLimit(61.15)
+          .forwardSoftLimitEnabled(true)
+          .reverseSoftLimit(0)
+          .reverseSoftLimitEnabled(true);
+          
       /*
        * Configure the closed loop controller. We want to make sure we set the
        * feedback sensor as the primary encoder.
@@ -41,7 +45,9 @@ public final class Configs {
           .closedLoop
           .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
           // Set PID values for position control
-          .p(0.1)
+          //TODO fix the P and D values
+          .p(0.05)
+          .d(0.05)
           .outputRange(-1, 1)
           .maxMotion
           // Set MAXMotion parameters for position control
@@ -51,6 +57,7 @@ public final class Configs {
 
       // Configure basic settings of the intake motor
       intakeConfig.inverted(true).idleMode(IdleMode.kBrake).smartCurrentLimit(40);
+
     }
   }
 
@@ -61,8 +68,13 @@ public final class Configs {
 
     static {
       // Configure basic settings of the arm motor
-    hingeConfig.idleMode(IdleMode.kCoast).smartCurrentLimit(40).voltageCompensation(12);
+    hingeConfig.idleMode(IdleMode.kCoast).smartCurrentLimit(40).voltageCompensation(12).inverted(false);
 
+    hingeConfig
+          .softLimit.forwardSoftLimit(35)
+          .forwardSoftLimitEnabled(true)
+          .reverseSoftLimit(0)
+          .reverseSoftLimitEnabled(true);
       /*
        * Configure the closed loop controller. We want to make sure we set the
        * feedback sensor as the primary encoder.
@@ -87,7 +99,8 @@ public final class Configs {
 
     static {
       // Configure basic settings of the arm motor
-    hangConfig.idleMode(IdleMode.kCoast).smartCurrentLimit(40).voltageCompensation(12);
+    hangConfig.idleMode(IdleMode.kBrake).smartCurrentLimit(40).voltageCompensation(12).inverted(true
+    );
 
       /*
        * Configure the closed loop controller. We want to make sure we set the

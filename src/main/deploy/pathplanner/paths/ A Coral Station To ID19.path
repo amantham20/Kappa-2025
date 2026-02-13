@@ -3,40 +3,40 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 7.132684426229508,
-        "y": 4.792213114754098
+        "x": 1.1268442622950818,
+        "y": 7.23171106557377
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.883500000000001,
-        "y": 5.82875
+        "x": 1.2946721311475413,
+        "y": 7.039907786885246
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "Coral Station"
     },
     {
       "anchor": {
-        "x": 5.154713114754099,
-        "y": 5.211782786885246
+        "x": 3.63,
+        "y": 5.19
       },
       "prevControl": {
-        "x": 5.957249999999999,
-        "y": 5.468
+        "x": 3.2395286052710612,
+        "y": 5.517644403302331
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "ID11"
+      "linkedName": "ID 6"
     }
   ],
   "rotationTargets": [],
   "constraintZones": [
     {
       "name": "Constraints Zone",
-      "minWaypointRelativePos": 0.7694244604316466,
+      "minWaypointRelativePos": 0.8684710351377023,
       "maxWaypointRelativePos": 1.0,
       "constraints": {
-        "maxVelocity": 1.0,
-        "maxAcceleration": 2.0,
+        "maxVelocity": 1.5,
+        "maxAcceleration": 0.8,
         "maxAngularVelocity": 270.0,
         "maxAngularAcceleration": 360.0,
         "nominalVoltage": 12.0,
@@ -47,8 +47,8 @@
   "pointTowardsZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 3.0,
-    "maxAcceleration": 3.0,
+    "maxVelocity": 2.0,
+    "maxAcceleration": 2.8,
     "maxAngularVelocity": 270.0,
     "maxAngularAcceleration": 360.0,
     "nominalVoltage": 12.0,
@@ -56,13 +56,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -120.57922687248912
+    "rotation": -58.29857033049431
   },
   "reversed": false,
-  "folder": null,
+  "folder": "Left Paths",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": -178.88760038370225
+    "rotation": -54.09027692082242
   },
-  "useDefaultConstraints": true
+  "useDefaultConstraints": false
 }
